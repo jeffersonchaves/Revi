@@ -4,12 +4,6 @@ import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-/**
- * Generated class for the EditoriasPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 @IonicPage()
 @Component({
   selector: 'page-editorias',
@@ -17,19 +11,19 @@ import 'rxjs/add/operator/map';
 })
 export class EditoriasPage {
 
-  private url: string = "https://api.myjson.com/bins/1as3cr";
+  private url: string = "http://www.ielusc.br/aplicativos/wordpress_revi/wp-json/app/v1/categories";
 
-  variavel: string = '';
-  slug: string = '';
-  public ids: Array <any>;
-  public names: Array <any>;
-  public names_string: string;
-
-  constructor(public navCtrl: NavController, public http: Http, public loadingCtrl: LoadingController, public navParams: NavParams, public storage: Storage) {
-    this.names = [];
-    this.slug = '?categories=';
-    this.names_string = '';
+  public checkedItens : Array <any>;
+  public categories : Array <any> = [];
+  public local_storage: Storage;
+  
+  constructor(public storage: Storage, public navCtrl: NavController, public http: Http, public loadingCtrl: LoadingController, public navParams: NavParams) {
+    this.local_storage = storage;
     this.fetchContent();
+
+    this.local_storage.set('setconsssss', "noconstrutor");
+
+    this.storeCategories();
   }
 
   fetchContent ():void {
@@ -39,36 +33,31 @@ export class EditoriasPage {
 
     loading.present();
 
-    this.http.get(this.url).map(res => res.json())
-      .subscribe(data => {
-        this.ids = data.data;
+    this.http.get(this.url).map(res => res.json()).subscribe(data => {
+        this.categories = data.data;
         loading.dismiss();
-        this.createCategories ();
-      });
+    });
   }
 
-  createCategories (){
-    for (let entry in this.ids){
-      this.names.push (this.ids["name"]);
-    }
-    this.createSlug();
+  alerta(term_id):void {
+     
+    let dataCategory = [
+      {
+      "nome" : term_id,
+      "term_id" : term_id,
+      "checked" : true
+      }
+    ];
+    this.local_storage.set('aaaaaaaaaaaa', dataCategory);
+
+    this.categories.forEach(element => {
+      console.log (element.name);
+    });
   }
 
-  createSlug (){
-    for (let name in this.names){
-      this.slug += name;
-      this.slug += ",";
-      alert (this.slug);
-    }
-  }
-
-  showCategories (){
-    for (let name in this.names){
-      alert (name);
-    }
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EditoriasPage');
+  public storeCategories(){
+    this.categories.forEach(element => {
+      console.log (element.name);
+    });
   }
 }

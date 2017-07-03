@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, AlertController, LoadingController, ActionSheetController, Content } from 'ionic-angular';
-import { InAppBrowser } from 'ionic-native';
 import { FormControl } from '@angular/forms';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Storage } from '@ionic/storage';
@@ -12,7 +11,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  host: {'class': 'home-page'}
 })
 
 export class HomePage {
@@ -21,7 +21,8 @@ export class HomePage {
 
   public feeds: Array <any>;
 
-  private url: string = "https://api.myjson.com/bins/1awtvn";
+  private pagerParam : any = 1;
+  private url : string = "";
 
   public saved_feeds: string = '';
   private itensSalvos: string = '';
@@ -56,6 +57,11 @@ export class HomePage {
     })
   }
 
+  getUrl(){
+    this.url = "http://www.ielusc.br/aplicativos/wordpress_revi/wp-json/app/v1/posts?page=" + this.pagerParam;
+    return this.url;
+  }
+
   toggleSearch() {
     this.toggled = this.toggled ? false : true;
   }
@@ -63,27 +69,34 @@ export class HomePage {
 
   fetchContent ():void {
     let loading = this.loadingCtrl.create({
-      content: 'Buscando conteúdo...'
+      content: 'sincronizando'
     });
 
     loading.present();
 
-    this.http.get(this.url).map(res => res.json())
-      .subscribe(data => {
+    this.http.get(this.getUrl()).map(res => res.json()).subscribe(data => {
+        
         this.feeds = data.data;
+
         this.noFilter = this.feeds;
         loading.dismiss();
       });
   }
 
-  // itemSelected (url: string):void {
-  //   let browser = new InAppBrowser(url, '_system');
-  // }
 
   itemSelected (feed) {
     this.navCtrl.push (NoticiaPage, {
       feed: feed
     });
+  }
+
+  swipeEvent(e, feed) {
+    
+    if(e.dircetion = '2'){
+      this.navCtrl.push (NoticiaPage, {
+        feed: feed
+      });
+    }
   }
 
   saveItem (post) {
@@ -127,31 +140,24 @@ export class HomePage {
     });
   }
 
+  doInfinite(infiniteScroll) {
+
+    this.pagerParam ++;
+
+    console.log(this.pagerParam);
+
+    this.http.get(this.getUrl()).map(res => res.json()).subscribe(data => {
+        
+        this.feeds = this.feeds.concat(data.data);
+        this.noFilter = this.feeds;
+
+        infiniteScroll.complete();
+    
+    });
+  }  
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // SOCIAL SHARE NÃO MECHER
-
+  // SOCIAL SHARE NÃO MEXER
   whatsappShare(){
     this.sharingVar.shareViaWhatsApp("Message via WhatsApp", null /*Image*/,  "http://www.google.com" /* url */)
     .then(

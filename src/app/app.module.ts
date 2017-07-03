@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { IonicStorageModule } from '@ionic/storage';
-import { Storage } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -19,6 +18,7 @@ import { NoticiaPage } from '../pages/noticia/noticia';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { BypassIframePipe } from '../pipes/bypassIframe/bypassIframe';
 
 
 @NgModule({
@@ -31,7 +31,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     EditoriasPage,
     SalvosPage,
     TutorialPage,
-    NoticiaPage
+    NoticiaPage,
+    BypassIframePipe
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,11 @@
   </ion-header>
 
   <ion-content class="sidebar">
+
+    <!-- <ion-thumbnail item-start>
+      <img src="http://www.ielusc.br/aplicativos/wordpress_revi/wp-content/uploads/2015/10/kkk.png">
+    </ion-thumbnail> -->
+
     <ion-list>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" class="sidebar_list">
         {{p.title}}

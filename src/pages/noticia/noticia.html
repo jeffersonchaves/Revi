@@ -3,15 +3,17 @@
     <ion-title>REVI</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content class="full-notice">
   <ion-card>
-    <img [src]="feed.img" />
+    <!--<img [src]="feed.img" />-->
     <ion-card-content>
       <ion-card-title>
         {{feed.post_title}}
       </ion-card-title>
-      <p [innerHTML]="feed.post_content" id="justify"></p><br/>
-      <span [innerHTML]="feed.post_date" class="data_e_hora"></span> - <span>{{feed.autor}}</span>
+      <p [innerHTML]="feed.post_content | bypassIframe"></p>
+      
+      <br/>
+      <span [innerHTML]="feed.post_date" class="data_e_hora"></span> - <span>{{feed.post_author}}</span>
     </ion-card-content>
     <ion-row no-padding>
       <ion-col>
